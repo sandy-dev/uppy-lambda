@@ -1,0 +1,19 @@
+service: lambda-uppy
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: production
+  region: us-east-2
+  Role: arn:aws:iam::895749083897:role/S3LambdaAccess
+  environment:
+    AWS_ACESS_KEY_ID: AKIAIIMXE5HMO5DVTQIA
+    AWS_S3_BUCKET: uppy.lambda.demo
+    AWS_S3_ACL: public-read
+functions:
+  app:
+    handler: lambda.handler
+    events: 
+      - http: ANY {proxy+}
+        cors: true
+      - http: ANY /
+        cors: true
