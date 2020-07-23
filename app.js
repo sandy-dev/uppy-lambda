@@ -9,12 +9,13 @@ var aws = require('aws-sdk')
 app.use(cors({ origin: '*' }))
 app.use(bodyParser.json())
 const ms = require('ms')
+const secretManager = require('./secretManager')
 
-aws.config.update({ // configure your AWS access
-    accessKeyId: process.env.AWS_ACESS_KEY_ID, // remember to use environment variables - store you credentials in a .env file and use .gitignore!
-    secretAccessKey: '2YGeg9JKrFh/RWrz02Nqo8Ff/EpshkaJARtzkQIw',//process.env.AWS_SECRET_ACCESS_KEY,
-    signatureVersion: 'v4', // important to include this
-    region: 'us-east-1'//process.env.AWS_REGION
+aws.config.update({
+    accessKeyId: secretManager.SecretsManager('AWS_ACESS_KEY_ID'),
+    secretAccessKey: secretManager.SecretsManager('AWS_SECRET_ACCESS_KEY'),
+    signatureVersion: 'v4',
+    region: secretManager.SecretsManager('AWS_REGION')
 })
 var s3 = new aws.S3()
 app.use(function (req, res, next) {
@@ -23,11 +24,8 @@ app.use(function (req, res, next) {
     next()
 })
 app.use(express.static('public'))
-app.get('/index', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-})
 app.get('/', (req, res) => {
-    res.send('hello from root')
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 app.get('/s3upload', (req, res) => {
     res.send('hello from root')
@@ -91,8 +89,6 @@ function getUploadParameters(req, res, next) {
  *  - uploadId - The ID of this multipart upload, to be used in later requests.
  */
 function createMultipartUpload(req, res, next) {
-    console.log('createMultipartUpload')
-    console.log(process.env.AWS_ACESS_KEY_ID)
     // @ts-ignore The `uppy` property is added by middleware before reaching here.
     const key = req.body.filename//config.getKey(req, req.body.filename)
     const { type } = req.body
