@@ -12,7 +12,7 @@ const uppy = Uppy.Core()
     })
     .use(AwsS3Multipart, { // use the AwsS3 plugin                                  
         fields: [], // empty array 
-        companionUrl: 'https://tl8is1l465.execute-api.us-east-2.amazonaws.com/production/',
+        companionUrl: '***',
     })
     .on("complete", (result) => {
         console.log(result);
