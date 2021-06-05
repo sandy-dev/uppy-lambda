@@ -1,8 +1,8 @@
-### AWS Lamda fileuploader
+### AWS Lambda fileuploader
 
 #### Stack
 - Uppy uploader
-- AWS Lamda
+- AWS Lambda
 - AWS s3 multipart
 
 #### Installation
